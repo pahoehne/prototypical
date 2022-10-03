@@ -1,0 +1,8 @@
+//
+// Created by Paul Hoehne on 9/24/22.
+//
+
+#ifndef PROTOTYPICAL_INTERNALS_H
+#define PROTOTYPICAL_INTERNALS_H
+
+#endif //PROTOTYPICAL_INTERNALS_H
