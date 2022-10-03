@@ -5,29 +5,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <setjmp.h>
+#include <hashmap.h>
 #include <cmocka.h>
 
-int SetUp(void **state);
-int TearDown(void **state);
-void Test0(void **state);
+void testSimpleHash(void **state);
 
-int SetUp(void **state) {
-    return 0;
-}
+void testSimpleHash(void **state) {
+    HASH_T expected = 5381 * 33 + 'a';
 
-int TearDown(void **state) {
-    return 0;
-}
-
-void Test0(void **state) {
-
+    assert_uint_equal(expected, StringHash("a"));
 }
 
 int main(int argc, char **argv) {
     const struct CMUnitTest tests[] = {
-            cmocka_unit_test(Test0),
+            cmocka_unit_test(testSimpleHash),
     };
 
-    return cmocka_run_group_tests(tests, SetUp, TearDown);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
