@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 struct HashMap {
-
+    int temp;
 };
 
 pHashMap HashMap_New(KeyHashFunc hash, KeyEqualsFunc equals, ValueCopyFunc copyFunc) {

@@ -2,6 +2,7 @@
 // Created by Paul Hoehne on 9/24/22.
 //
 
+#include <stdint.h>
 #include <stdlib.h>
 
 #ifndef PROTOTYPICAL_INTERNALS_H
