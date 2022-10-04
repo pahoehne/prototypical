@@ -8,8 +8,16 @@
 #include <stdarg.h>
 #include <cmocka.h>
 
-int main(int argc, char **argv) {
-    const struct CMUnitTest* tests = NULL;
+void temp_test(void **pContext);
 
-    return cmocka_run_group_tests(tests, NULL, NULL);
+void temp_test(void **pContext) {
+  
+}
+
+int main(int argc, char **argv) {
+  const struct CMUnitTest tests[] = {
+    cmocka_unit_test(temp_test)
+  };
+
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }

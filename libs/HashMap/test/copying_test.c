@@ -11,32 +11,44 @@
 #include <cmocka.h>
 
 void testSimpleCopy(void **state);
+void testCopyWithExistingBuffer(void **state);
+void testCopyFailsToAllocateMemory(void **state);
 
 void testSimpleCopy(void **state) {
-    uint8_t data[] = {1, 2, 3, 4, 5, 6, 7, 8};
-    uint8_t *copiedData = NULL;
-
-    assert_true(BytewiseCopy(data, sizeof(data), &copiedData));
-    assert_non_null(copiedData);
-    assert_memory_equal(data, copiedData, sizeof(data));
+  uint8_t data[] = {1, 2, 3, 4, 5, 6, 7, 8};
+  uint8_t *copiedData = NULL;
+  
+  assert_true(BytewiseCopy(data, sizeof(data), (void**)&copiedData));
+  assert_non_null(copiedData);
+  assert_memory_equal(data, copiedData, sizeof(data));
 }
 
 void testCopyWithExistingBuffer(void **state) {
-    uint8_t data[] = {1, 2, 3, 4, 5, 6, 7, 8};
-    uint8_t copiedData[] = {0, 0, 0, 0, 0, 0,0, 0};
-    uint8_t *outBuffer = copiedData;
+  uint8_t data[] = {1, 2, 3, 4, 5, 6, 7, 8};
+  uint8_t copiedData[] = {0, 0, 0, 0, 0, 0,0, 0};
+  uint8_t *outBuffer = copiedData;
+  
+  assert_true(BytewiseCopy(data, sizeof(data), (void**)&outBuffer));
+  assert_non_null(outBuffer);
+  assert_ptr_equal(outBuffer, copiedData);
+  assert_memory_equal(copiedData, data, sizeof(data));
+}
 
-    assert_true(BytewiseCopy(data, sizeof(data), &outBuffer));
-    assert_non_null(outBuffer);
-    assert_ptr_equal(outBuffer, copiedData);
-    assert_memory_equal(copiedData, data, sizeof(data));
+void testCopyFailsToAllocateMemory(void **state) {
+  will_return(_test_malloc, NULL);
+  uint8_t data[] = {1, 2, 3, 4, 5, 6, 7, 8};
+  uint8_t *copiedData = NULL;
+
+  assert_false(BytewiseCopy(data, sizeof(data), (void**)&copiedData));
+  assert_null(copiedData);
 }
 
 int main(int argc, char **argv) {
-    const struct CMUnitTest tests[] = {
-            cmocka_unit_test(testSimpleCopy),
-            cmocka_unit_test(testCopyWithExistingBuffer),
-    };
-
-    return cmocka_run_group_tests(tests, NULL, NULL);
+  const struct CMUnitTest tests[] = {
+    cmocka_unit_test(testSimpleCopy),
+    cmocka_unit_test(testCopyWithExistingBuffer),
+    cmocka_unit_test(testCopyFailsToAllocateMemory),
+  };
+  
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }
